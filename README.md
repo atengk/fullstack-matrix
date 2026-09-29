@@ -1,424 +1,600 @@
-<div align="center">
-
-# 全端全栈技术路线与工程架构规范
-### AI-Native Full-Stack Architecture Specification & Ecosystem Matrix
-
-</div>
-
-> **文档标识**：ARCH-SPEC-2026-FULLSTACK  
-> **制定版本**：v1.0.0 (Release)  
-> **文档属性**：企业级标准架构规范 / AI Agent 工程化协作基线  
-> **维护作者**：Ateng  
-> **创建日期**：2026-09-29  
-> **当前状态**：[✓] 终局评审通过，正式定稿
+# 全端全栈技术选型矩阵与工程基线
+> 面向全平台与 AI Agent 高效协作的标准技术选型矩阵。拒绝第三方个人二道封装，全面拥抱官方第一方工程生态；统一受控格式，无冗余废话，开箱即可落地。
 
 ---
 
-## 目录 (Table of Contents)
+## 00. 全栈技术选型速查总览
 
-1. [架构设计哲学与战略原则](#1-架构设计哲学与战略原则)
-2. [全景技术矩阵与端形态总览](#2-全景技术矩阵与端形态总览)
-3. [系统拓扑与全端交互模型](#3-系统拓扑与全端交互模型)
-4. [各端形态标准工程落地规范](#4-各端形态标准工程落地规范)
-5. [契约驱动与类型安全流水线](#5-契约驱动与类型安全流水线)
-6. [多仓库治理与交付运维体系](#6-多仓库治理与交付运维体系)
-7. [附录：权威信源与参考索引](#7-附录权威信源与参考索引)
+| 序号 | 业务形态 | 核心底座 | UI 与表现层 | 状态 / 路由 / 网络 | 核心优势 |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| **01** | **Web 业务管理系统** | **Vue 3** + Vite 5 + TS | **Element Plus** (`plus-ui 6.X-Vue`) | Pinia + vue-router + Axios | 前后台一体化，权限与通用组件高度统一，国内 B 端事实标准 |
+| **02** | **品牌官网 / 宣传落地页** | **React 19** + Vite 5 + TS | **TailwindCSS v4** + **shadcn/ui** | React Router + **Axios** | 100% 纯静态资产（零 Node 运行时），全球顶级 AI UI 生成生态 |
+| **03** | **微信 / 多端小程序** | **uni-app (Vue 3)** + Vite 5 | **Wot Design Uni** + UnoCSS | Pinia + uni 路由 + uni.request | 官方 Vite 模板，UnoCSS 极致压制 2MB 主包限制，组件库类型完备 |
+| **04** | **移动 APP & PC 桌面端** | **Flutter 3.x** + Dart | **Material 3 (现代 Slate Tokens)** | **flutter_bloc (Cubit)** + go_router + Dio | 一套代码通吃 5 大 OS，零代码生成税，全平台系统中文字体回退 |
+| **05** | **独立移动端 H5** | **Vue 3** + Vite 5 + TS | **Vant 4** + PostCSS vw 转换 | Pinia + vue-router + Axios | 移动 Web 标杆，375px 设计稿无损转 vw，大模型生成零失误 |
+| **06** | **数据可视化大屏** | **Vue 3** + Vite 5 + TS | **autofit.js** + ECharts 5 | Pinia + TailwindCSS | 封装 1920x1080 等比自适应计算与全局监听，消除个人非标大屏库死锁 |
+| **07** | **Web 3D 渲染与数字孪生** | **Three.js** + TS + Vite 5 | **Vue 原生 TS / React R3F 声明式** | gsap + Three 官方 Addons | 工业数字孪生用 Vue 原生性能极致；官网 3D 营销用 React 声明式组件 |
+| **08** | **Web 文档系统** | **VitePress (Vue 3)** | VitePress 默认主题 + Markdown | 纯静态 SSG | Vue 官方亲儿子，开箱自带全文搜索与暗黑模式，秒级静态构建 |
+| **09** | **核心业务后端** | **Spring Boot 3 / Cloud** | **RuoYi-Vue-Plus / Cloud-Plus 6.X** | Sa-Token + MyBatis-Plus + Redis 7 | 单体 6.X 默认敏捷交付，Cloud 6.X 承载企业级分布式微服务扩展 |
+| **10** | **AI 微服务与自动化脚本** | **Python 3.11+** + **FastAPI** | Pydantic v2 + uv | httpx + LiteLLM / LangGraph | 专职大模型工作流、RAG 向量检索与离线爬虫，生产级防缓冲流式推流 |
 
 ---
 
-## 1. 架构设计哲学与战略原则
+## 01. Web 业务管理系统 (Vue 3 + Element Plus)
 
-本技术路线专为 **AI Agent 工程化深度协作** 与 **长期高可维护性** 量身打造。在现代软件研发演进中，代码生成门槛被大幅抹平，而**工程治理防腐、接口契约严密性、架构边界纯净度**成为决定研发效能的生命线。
+### 1. 选型组合
+* **技术底座**：Vue 3 + TypeScript + Vite 5
+* **组件系统**：Element Plus + RuoYi-Vue-Plus 配套前端（**`plus-ui` 6.X-Vue 分支**）
+* **状态与网络**：Pinia + vue-router + Axios
 
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                      核心技术路线三项防腐准则                          │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. 拒绝二道脚手架：坚持官方第一方 CLI + 工业级框架组合，拒绝依赖断代   │
-│ 2. Web 业务一体化：PC 浏览器端工作台与管理后台合流，避免多项目撕裂     │
-│ 3. 业务与 AI 双引擎：Spring Boot 扛业务核心事务，FastAPI 专职 AI 侧翼  │
-└────────────────────────────────────────────────────────────────────────┘
+### 2. 核心考量
+* **前后台一体化**：将商户业务工作台与管理员中后台收敛至同一工程，通过 RBAC 动态路由与角色权限进行优雅隔离，避免双工程重复建设。
+* **生态最成熟**：Element Plus 是国内企业级中后台最稳固的底座，大模型编写 CRUD 表单/表格代码几乎零失误。
+
+### 3. 工程创建与依赖安装
+```bash
+# 显式克隆官方 6.X-Vue 分支（适配最新 Vue 3.5 与 Vite 8 架构）
+git clone -b 6.X-Vue https://gitee.com/JavaLionLi/plus-ui.git web-admin
+cd web-admin
+pnpm install
 ```
 
-### 1.1 拒绝“二道贩子”第三方脚手架
-* **痛点**：社区中大量个人二次封装的脚手架充斥着商业广告引流、版本锁死（如旧版 Webpack、Vite 2/3）、过时的依赖库（如 DataV、amfe-flexible）以及充斥 `any` 的劣质封装。
-* **准则**：**坚决采用官方第一方工程工具（如 `create-vite`、`create-vue`、`flutter create`）配合经过生态检验的标杆级组件库**。配置代码最小化（≤ 30 行），架构透明可控，零历史包袱。
+### 4. 核心关键配置
+```ts
+// vite.config.ts 核心配置
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import path from 'path';
 
-### 1.2 Web 端业务前后台一体化
-* **痛点**：为普通业务人员（或外部商户）单独搭建一套 PC 前台 Web 项目，往往导致登录鉴权、Token 刷新、网络拦截、组件样式与中后台严重重复建设，徒增维护负担。
-* **准则**：**将 PC 浏览器端全部业务统一收敛在 `RuoYi-Vue-Plus` + `plus-ui`**。通过 RBAC 动态路由与角色权限，在同一工程内优雅隔离“普通业务工作台”与“系统管理运维”，开发规范统一，资产复用率达 100%。
-
-### 1.3 核心业务全端归一 + AI 专属插件化
-* **痛点**：跨端业务拆分过细导致后端服务碎片化，或盲目使用 Java 硬抗大语言模型工作流。
-* **准则**：
-  * **主干归一**：Spring Boot 3 (`RuoYi-Vue-Plus`) 作为**全端唯一通用业务主心骨**，承载全部数据库事务、资金支付、Sa-Token 多端统一认证与通用 CRUD。
-  * **AI 侧翼**：Python 3.11+ (`FastAPI`) 严格作为轻量微服务运行，专注大模型调用、RAG 向量检索与离线爬虫编排，输出结果统一回填至主后端。
-
-### 1.4 面向 AI Agent（LLM-Native）的代码生成准则
-* **严格静态类型（TypeScript & Dart）**：杜绝动态弱类型导致的隐式 Bug，为大模型提供确定性的 AST 语法上下文。
-* **原子化样式（TailwindCSS & UnoCSS）**：无外部样式污染，类名即语义，大模型生成界面布局准确率最高。
-* **强契约消除幻觉**：基于 OpenAPI 3.0 管道自动化生成各端请求 SDK，从根源切断大模型手写 API 时的路径拼错与字段虚构。
-
----
-
-## 2. 全景技术矩阵与端形态总览
-
-全体系由 **7 大终端表现层 + 2 大服务端引擎 + 1 套契约管道** 构成：
-
-| 序号 | 业务端形态 | 框架生态官方组合 | 核心技术底座 | 针对 AI Agent 的工程化优势 |
-| :---: | :--- | :--- | :--- | :--- |
-| **01** | **Web 业务管理系统**<br>(Web Admin & Workbench) | `plus-ui` 深度定制<br>+ `RuoYi-Vue-Plus` | **Vue 3** + **Element Plus**<br>+ Pinia + Vite 5 | **前后台一体化**。商户/业务员看业务台，管理员看系统监控；组件库与权限机制高度统一，AI 编写业务 CRUD 零心智切换。 |
-| **02** | **品牌官网 / 宣传落地页**<br>(Brand Website) | 官方 `create-vite (react-ts)`<br>+ `shadcn/ui` 组合 | **React 19** + **Vite 5**<br>+ TailwindCSS + TS | **100% 纯前端静态资产**，零 Node.js 运行时负担。享受全球最高水准的 React AI UI 生成生态（v0 / Cursor 极速出图），动态数据直连 Spring Boot。 |
-| **03** | **微信 / 多端小程序**<br>(Mini-Program) | DCloud 官方 Vite 模板<br>+ `Wot Design Uni` | **uni-app (Vue 3)** + Vite 5<br>+ UnoCSS + Pinia + TS | **摆脱第三方模板捆绑**。UnoCSS 保证编译零冗余样式，完美压制小程序 2MB 主包体积限制；Wot Design Uni 覆盖最全移动组件，类型完备。 |
-| **04** | **移动 APP & PC 桌面端**<br>(Mobile & Desktop) | Google 官方 `flutter create`<br>+ 现代架构组合 | **Flutter 3.x** + **Dart**<br>+ Riverpod + Drift + shadcn | **一套代码通吃 5 大操作系统**（iOS/Android/Windows/macOS/Linux）。Riverpod 编译期强类型，Drift 提供企业级本地 SQLite 复杂查询，shadcn_ui 赋予现代质感。 |
-| **05** | **独立移动端 H5 / 公众号**<br>(Mobile H5) | Vue 官方 `create-vue`<br>+ `Vant 4` 组合 | **Vue 3** + **Vite 5**<br>+ Vant 4 + vw 视口适配 | **国内移动 Web 标杆标准**。核心配置不足 30 行，组件自动按需加载，375px 设计稿自动转 vw 视口单位，大模型写 Vant 交互代码零失误。 |
-| **06** | **数据可视化大屏**<br>(BI Dashboard) | Vue 官方 `create-vue`<br>+ `autofit.js` 组合 | **Vue 3** + **Vite 5**<br>+ autofit.js + ECharts 5 | **彻底淘汰死锁的 DataV 与 scale 坐标偏移缺陷**。autofit.js 一行代码实现 1920x1080 等比缩放；TailwindCSS 打造现代毛玻璃科技风。 |
-| **07** | **Web 3D 渲染场景**<br>(Web 3D & Digital Twin) | Three.js 原生 TS 组合<br>*(官网配 R3F + Drei)* | **Three.js** + **TypeScript**<br>+ gsap + three-stdlib | **工业级标准底层**。零第三方黑盒抽象，直接操纵 Scene 与 Camera，与 Vue 业务大屏深度集成；官网营销场景按需启用 R3F 声明式组装。 |
-| **08** | **Web 文档系统**<br>(Docs & Knowledge Base) | Vue 官方亲儿子 `VitePress` | **VitePress (Vue 3)**<br>+ Markdown + Vite | **Docs-as-Code 标杆**。开箱自带暗黑模式、侧边栏自动生成、全文检索；Markdown 中直接嵌入 Vue 交互组件，构建为秒级纯静态 HTML。 |
-| **09** | **核心业务后端**<br>(Core Backend Engine) | [RuoYi-Vue-Plus 5.x](https://gitee.com/dromara/RuoYi-Vue-Plus) | **Spring Boot 3** + JDK 17/21<br>+ Sa-Token + MyBatis-Plus | **全端唯一业务主心骨**。承载全部数据库事务、关系型建模、资金交易、Sa-Token 多端登录体系，提供规范 OpenAPI 3.0 元数据。 |
-| **10** | **AI Agent / 脚本微服务**<br>(AI & Script Service) | Astral `uv` 极速微服务骨架 | **Python 3.11+** + **FastAPI**<br>+ Pydantic v2 + httpx | **全端 AI 专属能力侧翼**。负责大模型调用、LangChain 工作流、RAG 向量切分检索、SSE 流式推流与异步爬虫，结果回填至主数据库。 |
-
----
-
-## 3. 系统拓扑与全端交互模型
-
-### 3.1 架构拓扑全景图
-
-```mermaid
-flowchart TD
-    subgraph MultiTerminal ["全端表现层 (Multi-Repo 独立代码库)"]
-        A1["Web 业务管理系统<br>【plus-ui / Vue 3】"]
-        A2["品牌官网 / 宣传落地页<br>【Vite + React 19 + shadcn/ui】"]
-        A3["微信多端小程序<br>【uni-app + Wot Design Uni】"]
-        A4["移动 APP & PC 桌面端<br>【Flutter + Riverpod + Drift + shadcn】"]
-        A5["独立移动 H5 / 公众号<br>【Vue 3 + Vant 4 + vw 适配】"]
-        A6["数据可视化大屏<br>【Vue 3 + autofit + ECharts】"]
-        A7["Web 3D 渲染场景<br>【Three.js 原生 / R3F】"]
-        A8["Web 文档系统<br>【VitePress / 纯静态 SSG】"]
-    end
-
-    subgraph Contracts ["契约与自动化层 (消灭 Agent 接口幻觉)"]
-        C1["OpenAPI 3.0 元数据 (/v3/api-docs)"]
-        C2["自动化生成 TS / Dart Client SDK<br>(openapi-typescript / orval / openapi-generator)"]
-    end
-
-    subgraph CoreBackend ["核心业务后端 (全端唯一业务主心骨)"]
-        B1["RuoYi-Vue-Plus (Spring Boot 3)<br>- Sa-Token 多端统一鉴权 (admin / app / client)<br>- MyBatis-Plus + Redisson 核心分布式事务<br>- 全端业务 CRUD / 支付 / 文件存储 / 审计日志"]
-        DB[(MySQL 8.0+ / Redis 7.x)]
-    end
-
-    subgraph AISidecar ["AI 与自动化专属侧翼 (轻量微服务)"]
-        B2["FastAPI (Python 3.11+)<br>- 大模型流式推流 (SSE)<br>- RAG 知识库向量切分与检索<br>- 定时爬虫与离线数据清洗编排"]
-    end
-
-    A1 -->|Header: Authorization (admin/client)| B1
-    A2 -->|公开 REST API (Axios / TanStack Query)| B1
-    A3 -->|Header: Authorization (app/openid)| B1
-    A4 -->|Header: Authorization (app/dio)| B1
-    A5 -->|Header: Authorization (h5)| B1
-    A6 -->|实时数据 / WebSocket| B1
-    A7 -->|设备孪生/传感器数据| B1
-    A8 -.->|静态托管 CDN / Nginx| A8
-
-    B1 -.->|动态导出接口契约| C1
-    C1 --> C2
-    C2 -.->|强类型 SDK 注入| MultiTerminal
-
-    B1 <-->|HTTP / RPC 调度| B2
-    B1 --> DB
-    B2 -.->|读取/回填数据| DB
-```
-
-### 3.2 Sa-Token 多端统一鉴权与 Session 隔离规范
-
-为防止多端用户在同一服务端发生会话混淆与权限越权，在 `RuoYi-Vue-Plus` 中配置三套独立的 Sa-Token 账号体系：
-
-| 客户端类别 | 体系标识 | 鉴权工具类 | 请求头规范 | Session 存储 Key 格式 | 登录与互踢策略 |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **中后台系统管理员** | `admin` | `StpUtil` (默认) | `Authorization: Bearer <token>` | `satoken:login:admin:<id>` | 单端登录，同端互踢（保证安全） |
-| **Web 业务前台 / 商户** | `client` | `StpClientUtil` | `Authorization: Bearer <token>` | `satoken:login:client:<id>` | 允许同账号多地点并发登录 |
-| **移动端 / 小程序 / APP** | `app` | `StpAppUtil` | `Authorization: Bearer <token>` | `satoken:login:app:<id>` | 多端共存，Token 长效持久化（30 天） |
-
----
-
-## 4. 各端形态标准工程落地规范
-
-### 4.1 品牌官网 (纯前端 React 19)
-* **工程创建命令**：
-  ```bash
-  pnpm create vite brand-website --template react-ts
-  cd brand-website
-  pnpm add -D tailwindcss postcss autoprefixer
-  npx tailwindcss init -p
-  npx shadcn@latest init
-  pnpm add axios @tanstack/react-query lucide-react clsx tailwind-merge
-  ```
-* **推荐标准目录骨架**：
-  ```text
-  brand-website/
-  ├── src/
-  │   ├── api/            # 由 OpenAPI 生成的强类型请求函数
-  │   ├── components/     # 营销区块 (Hero, Features, Pricing, FAQ, Footer)
-  │   ├── hooks/          # 自定义 React Hooks
-  │   ├── lib/            # 工具类 (utils.ts, queryClient.ts)
-  │   ├── App.tsx         # 落地页主入口
-  │   └── main.tsx
-  ├── tailwind.config.js
-  └── vite.config.ts
-  ```
-* **部署规范**：执行 `pnpm build` 输出纯静态 `dist/`，直接交付 Nginx 静态托管或内置在 Spring Boot `static/` 目录下，**严禁部署 Node.js 服务端**。
-
----
-
-### 4.2 微信 / 多端小程序 (官方 uni-app + Wot Design Uni)
-* **工程创建命令**：
-  ```bash
-  npx degit dcloudio/uni-preset-vue#vite-ts my-uniapp
-  cd my-uniapp
-  pnpm add wot-design-uni pinia
-  pnpm add -D unocss @unocss/preset-uno
-  ```
-* **`vite.config.ts` 关键配置**：
-  ```ts
-  import { defineConfig } from 'vite';
-  import uni from '@dcloudio/vite-plugin-uni';
-  import UnoCSS from 'unocss/vite';
-
-  export default defineConfig({
-    plugins: [uni(), UnoCSS()],
-  });
-  ```
-* **AI 提示约束**：开发页面布局时，100% 优先采用 UnoCSS 简写类（如 `p-4 flex items-center justify-between`），杜绝编写全局自定义 CSS 类，防止包体积膨胀。
-
----
-
-### 4.3 移动 APP & PC 桌面端 (Flutter 现代全平台栈)
-* **工程创建与依赖安装**：
-  ```bash
-  flutter create my_app --platforms=android,ios,windows,macos,linux
-  cd my_app
-  flutter pub add flutter_riverpod riverpod_annotation go_router dio drift sqlite3_flutter_libs path_provider path shadcn_ui
-  flutter pub add -d build_runner drift_dev riverpod_generator
-  ```
-* **推荐 Clean Architecture 目录结构**：
-  ```text
-  lib/
-  ├── core/            # 核心网络层(Dio)、路由配置(go_router)、主题设计
-  ├── database/        # Drift 关系型数据库定义 (tables.dart, database.dart)
-  ├── features/        # 按业务垂直划分 (Feature-first)
-  │   └── order/
-  │       ├── data/           # 数据源层 (Remote DataSource, Models)
-  │       ├── domain/         # 业务实体层 (Entities)
-  │       └── presentation/   # 页面与 Riverpod 状态提供者 (Controller/UI)
-  └── main.dart
-  ```
-
----
-
-### 4.4 独立移动端 H5 (Vue 3 + Vant 4)
-* **工程创建与依赖安装**：
-  ```bash
-  npm create vue@latest my-h5-app   # 勾选 TypeScript, Router, Pinia
-  cd my-h5-app
-  pnpm add vant
-  pnpm add -D unplugin-vue-components @vant/auto-import-resolver postcss-px-to-viewport-8-plugin
-  ```
-* **`postcss.config.js` 视口无损转换配置**：
-  ```js
-  module.exports = {
-    plugins: {
-      'postcss-px-to-viewport-8-plugin': {
-        viewportWidth: 375, // 统一按照 375px 设计稿标准直接书写 px，自动转换为 vw
-        unitPrecision: 5,
-        viewportUnit: 'vw',
-        selectorBlackList: ['.ignore', 'keep-px'],
-        minPixelValue: 1,
-        mediaQuery: false,
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
+  server: {
+    port: 5173, // 采用标准非特权端口，防止跨平台权限报错
+    proxy: {
+      '/dev-api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/dev-api/, ''),
       },
     },
-  };
-  ```
-
----
-
-### 4.5 数据可视化大屏 (Vue 3 + autofit.js + ECharts 5)
-* **工程创建与依赖安装**：
-  ```bash
-  npm create vue@latest big-screen-app
-  cd big-screen-app
-  pnpm add echarts vue-echarts autofit.js
-  pnpm add -D tailwindcss postcss autoprefixer
-  ```
-* **`main.ts` 全局等比自适应初始化**：
-  ```ts
-  import { createApp } from 'vue';
-  import App from './App.vue';
-  import autofit from 'autofit.js';
-
-  createApp(App).mount('#app');
-
-  // 一行代码搞定全屏自适应，彻底解决 Tooltip 坐标位移问题
-  autofit.init({
-    designWidth: 1920,
-    designHeight: 1080,
-    renderDom: '#app',
-    resize: true,
-  });
-  ```
-
----
-
-### 4.6 Web 3D 渲染场景 (Three.js 通用底座 & R3F)
-* **大屏 / 业务台 3D 通用工程**：
-  ```bash
-  pnpm create vite web3d-twin --template vue-ts
-  cd web3d-twin
-  pnpm add three gsap three-stdlib
-  pnpm add -D @types/three
-  ```
-* **官网声明式 3D（在 React 官网工程按需引入）**：
-  ```bash
-  pnpm add three @types/three @react-three/fiber @react-three/drei
-  ```
-
----
-
-### 4.7 Web 文档系统 (VitePress)
-* **工程创建命令**：
-  ```bash
-  mkdir my-docs && cd my-docs
-  pnpm init
-  pnpm add -D vitepress
-  npx vitepress init # 交互式引导生成标准骨架
-  ```
-* **标准 `docs/.vitepress/config.mts` 配置结构**：
-  ```ts
-  import { defineConfig } from 'vitepress';
-
-  export default defineConfig({
-    title: '企业产品技术文档库',
-    description: '标准用户手册与开放接口文档',
-    themeConfig: {
-      nav: [{ text: '首页', link: '/' }, { text: '开发指南', link: '/guide/' }],
-      sidebar: [
-        {
-          text: '入门指引',
-          items: [{ text: '快速开始', link: '/guide/quick-start' }],
-        },
-      ],
-      search: { provider: 'local' },
-    },
-  });
-  ```
-
----
-
-### 4.8 AI Agent / 自动化脚本微服务 (Python FastAPI)
-* **基于 Astral `uv` 极速初始化**：
-  ```bash
-  uv init ai-sidecar --app
-  cd ai-sidecar
-  uv add "fastapi[standard]" pydantic-settings httpx structlog
-  ```
-* **极简纯异步分层结构**：
-  ```text
-  ai-sidecar/
-  ├── app/
-  │   ├── api/            # 路由定义 (v1/agent.py, v1/crawler.py)
-  │   ├── core/           # 环境变量与配置 (config.py, logging.py)
-  │   ├── schemas/        # Pydantic 输入输出契约定义
-  │   ├── services/       # 大模型调用流、RAG 检索、工作流编排
-  │   └── main.py         # FastAPI 应用入口与生命周期管理
-  ├── pyproject.toml
-  └── uv.lock
-  ```
-
----
-
-## 5. 契约驱动与类型安全流水线
-
-为了在 Multi-repo 多端架构下彻底消除 AI Agent 编写 API 请求时的**路径拼错、入参漏传、类型虚构**等幻觉问题，全栈统一采用“**后端单一真理源，前端一键自动生成**”管道：
-
-```text
-               ┌─────────────────────────────────────┐
-               │    RuoYi-Vue-Plus (Spring Boot 3)   │
-               │   @Operation, @Schema, @Tag 注解     │
-               └──────────────────┬──────────────────┘
-                                  │ 启动动态生成
-                                  ▼
-               ┌─────────────────────────────────────┐
-               │     OpenAPI 3.0 元数据 JSON 契约     │
-               │           (/v3/api-docs)            │
-               └──────────────────┬──────────────────┘
-                                  │
-         ┌────────────────────────┴────────────────────────┐
-         │ CI / 本地自动化命令执行                          │ 本地自动化命令执行
-         ▼                                                 ▼
-┌──────────────────────────────┐              ┌──────────────────────────────┐
-│  前端工具: openapi-typescript │              │  客户端工具: openapi-generator│
-│       或 orval 工具          │              │        (Dart 目标生成器)     │
-└──────────────┬───────────────┘              └──────────────┬───────────────┘
-               │ 导出 TS 接口与 Axios Client                 │ 导出 Dart Model 与 Dio Client
-               ▼                                             ▼
-┌──────────────────────────────┐              ┌──────────────────────────────┐
-│  Vue 3 / React / uniapp 消费 │              │       Flutter 客户端消费     │
-│  (全属性精准补全，编译期强校验) │              │   (强类型实体映射，杜绝空指针) │
-└──────────────────────────────┘              └──────────────────────────────┘
+  },
+});
 ```
 
-* **前端执行规范**：在各前端工程的 `package.json` 中配置：
-  ```json
-  "scripts": {
-    "gen:api": "openapi-typescript http://localhost:8080/v3/api-docs -o src/api/schema.d.ts"
+### 5. 推荐工程目录结构
+```text
+src/
+├── api/             # 按业务模块划分的请求定义
+├── assets/          # 静态图标与全局样式
+├── components/      # 通用业务组件 (DictTag, FileUpload, Table)
+├── layout/          # 页面通用架子 (Navbar, Sidebar, TagsView)
+├── router/          # 路由配置与动态权限守卫
+├── store/           # Pinia 状态管理 (modules/user, permission)
+└── views/           # 页面表现层 (system, business)
+```
+
+---
+
+## 02. 品牌官网与营销落地页 (React 19 + shadcn/ui)
+
+### 1. 选型组合
+* **技术底座**：React 19 + TypeScript + Vite 5
+* **UI 表现层**：TailwindCSS v4 + shadcn/ui (Radix UI)
+* **状态与网络**：React 19 Hooks + **Axios**（统一拦截与超时控制）
+
+### 2. 核心考量
+* **纯前端静态资产**：打包产物为纯 HTML/JS/CSS，零 Node.js 运行时负担，全球 CDN 边缘极速分发。
+* **顶级 AI 生成生态**：React + Tailwind + shadcn 是全球公认最先进的 UI 生成生态（v0 / Cursor 极速出图），组件源码全量拷入项目，零不可控封装。
+
+### 3. 工程创建与依赖安装
+```bash
+npm create vite@latest brand-site -- --template react-ts
+cd brand-site
+pnpm install
+# 引入统一请求库 Axios
+pnpm add axios
+# 适配最新 Tailwind CSS v4 官方原生 Vite 插件
+pnpm add tailwindcss @tailwindcss/vite
+pnpm add -D @types/node
+# 执行官方 shadcn/ui 初始化向导（自动配置 utils 与核心无头依赖）
+pnpm dlx shadcn@latest init
+```
+
+### 4. 核心关键配置
+```ts
+// vite.config.ts (集成 Tailwind v4 原生插件与路径别名)
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import path from 'path';
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+});
+```
+
+### 5. 推荐工程目录结构
+```text
+src/
+├── api/             # Axios 封装与轻量请求定义 (client.ts)
+├── components/
+│   ├── ui/          # shadcn 自动生成的无头原子组件 (button, dialog, card)
+│   └── landing/     # 官网业务区块 (Hero, Features, Pricing, Footer)
+├── hooks/           # 通用交互 Hooks
+├── lib/             # 工具函数 (utils.ts - cn 样式合并)
+└── App.tsx          # 官网单页聚合入口
+```
+
+---
+
+## 03. 微信与多端小程序 (uni-app + Wot Design Uni)
+
+### 1. 选型组合
+* **技术底座**：uni-app (Vue 3) + TypeScript + Vite 5
+* **组件系统**：Wot Design Uni + UnoCSS
+* **状态与网络**：Pinia + uni.request 封装
+
+### 2. 核心考量
+* **摆脱第三方脚手架捆绑**：坚持 DCloud 官方 Vite 模板，代码干净透明。
+* **严控包体积**：UnoCSS 保证编译零冗余样式，完美压制小程序 2MB 主包体积红线；Wot Design Uni 组件完备、移动端体验佳。
+
+### 3. 工程创建与依赖安装
+```bash
+# 使用官方 TypeScript 模板（若 GitHub 连接慢可改用 Gitee 镜像）
+npx degit dcloudio/uni-preset-vue#vite-ts mini-program
+cd mini-program
+pnpm install
+pnpm add wot-design-uni pinia
+pnpm add -D unocss @uni-helper/unocss-preset-uni
+```
+
+### 4. 核心关键配置
+```ts
+// uno.config.ts (核心：处理小程序类名转义与 rem->rpx 换算)
+import { defineConfig } from 'unocss';
+import { presetUni } from '@uni-helper/unocss-preset-uni';
+
+export default defineConfig({
+  presets: [presetUni()],
+});
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import uni from '@dcloudio/vite-plugin-uni';
+import UnoCSS from 'unocss/vite';
+
+export default defineConfig({
+  plugins: [uni(), UnoCSS()],
+});
+```
+
+### 5. 推荐工程目录结构
+```text
+src/
+├── api/             # 小程序后端接口
+├── components/      # 业务可复用组件
+├── pages/           # 主包页面 (index, my)
+├── subPackages/     # 业务分包目录 (order, goods)
+├── store/           # Pinia 状态管理
+├── static/          # 本地静态图片与图标
+└── uno.config.ts    # UnoCSS 转义规则配置
+```
+
+---
+
+## 04. 移动 APP & PC 桌面端 (Flutter 3.x + BLoC)
+
+### 1. 选型组合
+* **技术底座**：Flutter 3.x + Dart 3.x
+* **状态管理**：`flutter_bloc`（采用 **Cubit-First** 敏捷模式，零代码生成税）
+* **UI 与设计系统**：Google 官方 **Material 3** + **现代 Slate Tokens**（彻底根治原生 Android 泥土感）
+* **路由与网络**：`go_router` + `dio`
+* **持久化与跨平台**：动静分层存储（默认 `shared_preferences` + `flutter_secure_storage`，复杂离线才上 `drift`）+ `flutter_adaptive_scaffold` + `window_manager`
+
+### 2. 核心考量
+* **一套代码通吃 5 大操作系统**（iOS/Android/Windows/macOS/Linux），零 `build_runner` 生成税。
+* **纯中文专属优化**：全平台配置系统级中文字体回退链（零包体积增加，自适应苹方/微软雅黑/思源黑体）；固化 CJK 排版补丁根治文字偏下 1~2px 顽疾；锁定官方中文本地化代理。
+
+### 3. 工程创建与依赖安装
+```bash
+flutter create my_app --platforms=android,ios,windows,macos,linux
+cd my_app
+# 1. 安装核心第三方库（注意：严禁在末尾拼接 --sdk=flutter 以免参数全局污染）
+flutter pub add flutter_bloc go_router dio shared_preferences flutter_secure_storage flutter_adaptive_scaffold window_manager
+# 2. 单独引入 Flutter SDK 官方本地化库
+flutter pub add flutter_localizations --sdk=flutter
+```
+
+### 4. 核心关键配置
+```dart
+// lib/core/theme/app_theme.dart (中文现代 Design Tokens 核心配置)
+import 'package:flutter/material.dart';
+
+final appTheme = ThemeData(
+  useMaterial3: true,
+  splashFactory: NoSplash.splashFactory, // 禁用老旧水波纹，改为现代高质感透明度过渡
+  // 1. 全平台系统级中文字体回退链（零包体积膨胀，各端调用系统最高清原生黑体）
+  fontFamilyFallback: const [
+    'PingFang SC',      // iOS / macOS 苹方
+    'Microsoft YaHei',  // Windows 微软雅黑
+    'Noto Sans SC',     // Android / Linux 思源黑体
+    'sans-serif',
+  ],
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: const Color(0xFF0F172A), // Slate-900 冷黑现代科技基调
+    surface: Colors.white,
+    outline: const Color(0xFFE2E8F0),   // 1px 极细微边框 Slate-200
+  ),
+  cardTheme: CardTheme(
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      side: const BorderSide(color: Color(0xFFE2E8F0)),
+      borderRadius: BorderRadius.circular(8), // 8px 现代微圆角，杜绝药丸
+    ),
+  ),
+  filledButtonTheme: FilledButtonThemeData(
+    style: FilledButton.styleFrom(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      elevation: 0,
+    ),
+  ),
+);
+```
+
+### 5. 推荐工程目录结构
+```text
+lib/
+├── core/            # 核心网络层(Dio)、路由配置(go_router)、现代主题与中文排版(theme)
+├── features/        # 按业务垂直划分 (Feature-first)
+│   └── order/
+│       ├── data/           # 数据源层 (Remote DataSource, Models)
+│       ├── domain/         # 业务实体层 (Entities)
+│       └── presentation/   # 页面与状态控制器 (Cubit-first, UI)
+│           ├── cubit/      # 普通业务 CRUD 优先采用 Cubit (零代码生成开销)
+│           └── views/      # 界面结合 flutter_adaptive_scaffold 自适应多端
+└── main.dart        # 入口，锁定 Locale('zh', 'CN') 与本地化代理
+```
+
+---
+
+## 05. 独立移动端 H5 (Vue 3 + Vant 4)
+
+### 1. 选型组合
+* **技术底座**：Vue 3 + TypeScript + Vite 5
+* **组件系统**：Vant 4 + `postcss-px-to-viewport-8-plugin`（或 `postcss-mobile-forever`）
+* **状态与网络**：Pinia + vue-router + Axios
+
+### 2. 核心考量
+* **国内移动 Web 标杆**：Vant 4 是国内 H5/公众号/内嵌 Webview 事实标准，组件自动按需引入，性能极高。
+* **375px 设计稿无损适配**：代码内直接按照设计稿标注书写 `px`，构建时自动无损编译为 `vw` 视口单位。
+
+### 3. 工程创建与依赖安装
+```bash
+npm create vue@latest mobile-h5 # 勾选 TypeScript, Router, Pinia
+cd mobile-h5
+pnpm install
+pnpm add vant
+pnpm add -D unplugin-vue-components @vant/auto-import-resolver postcss-px-to-viewport-8-plugin
+```
+
+### 4. 核心关键配置
+```js
+// postcss.config.cjs (重要：必须采用 .cjs 后缀，避免与 package.json 的 ESM 冲突)
+module.exports = {
+  plugins: {
+    'postcss-px-to-viewport-8-plugin': {
+      viewportWidth: 375, // 统一按照 375px 标准直接写 px，自动转换为 vw
+      unitPrecision: 5,
+      viewportUnit: 'vw',
+      selectorBlackList: ['.ignore', 'keep-px'],
+      minPixelValue: 1,
+    },
+  },
+};
+```
+
+### 5. 推荐工程目录结构
+```text
+src/
+├── api/             # H5 业务接口
+├── assets/          # 移动端静态图片与基础样式
+├── components/      # H5 专属业务组件
+├── router/          # 路由配置 (支持滚动还原与页面切换过渡)
+├── store/           # Pinia 状态管理
+└── views/           # 页面表现层 (商城首页、个人中心)
+```
+
+---
+
+## 06. 数据可视化大屏 (Vue 3 + autofit.js + ECharts 5)
+
+### 1. 选型组合
+* **技术底座**：Vue 3 + TypeScript + Vite 5
+* **大屏适配与图表**：`autofit.js` + `ECharts 5` (`vue-echarts`)
+* **样式表现**：TailwindCSS (毛玻璃与科技质感)
+
+### 2. 核心考量
+* **消除个人非标大屏库死锁**：彻底告别依赖断更的第三方大屏组件；`autofit.js` 统一封装了 1920x1080 等比缩放计算与原点监听，一行代码实现全屏居中铺满。
+* **极速开发**：搭配 TailwindCSS 科技风毛玻璃类名，专注 ECharts 数据表达。
+
+### 3. 工程创建与依赖安装
+```bash
+npm create vue@latest big-screen-app
+cd big-screen-app
+pnpm install
+pnpm add echarts vue-echarts autofit.js
+pnpm add -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+### 4. 核心关键配置
+```ts
+// src/main.ts (全局等比自适应初始化)
+import { createApp } from 'vue';
+import App from './App.vue';
+import autofit from 'autofit.js';
+
+createApp(App).mount('#app');
+
+// 一行代码搞定全屏自适应铺满
+autofit.init({
+  dh: 1080,
+  dw: 1920,
+  el: '#app',
+  resize: true,
+});
+```
+
+### 5. 推荐工程目录结构
+```text
+src/
+├── components/
+│   ├── charts/      # ECharts 封装组件 (LineChart, BarChart, MapChart)
+│   └── panels/      # 边框、标题饰条、数字翻牌器
+├── hooks/           # 图表自适应与自动轮询数据 Hooks
+└── views/           # 大屏总览界面 (HomeView - 3列栅格布局)
+```
+
+---
+
+## 07. Web 3D 渲染与数字孪生 (Three.js 双引擎分流)
+
+### 1. 选型组合与场景划分
+* **场景 A：Vue 3 工业大屏 / 数字孪生 / 复杂监控**
+  * **选型**：**原生 Three.js (TypeScript) + 官方 Addons**（直调 `three/addons/*`）
+  * **定位**：直接操作 Scene、Camera 与 WebGLRenderer，大屏频繁数据通信（WebSocket/ECharts 联动）零损耗，无第三方黑盒。
+* **场景 B：React 19 品牌官网 / 炫酷宣传 / 营销动态卡片**
+  * **选型**：**React Three Fiber (`@react-three/fiber`) + Drei (`@react-three/drei`)**
+  * **定位**：全声明式 JSX 组件化（`<Canvas><mesh /></Canvas>`），轻松结合 React 状态、Hover 手势与 Spring 物理动效，打造苹果/Stripe 级营销 3D 视觉。
+
+### 2. 核心考量
+* **类型安全与零冗余**：现代 `three` 自带 `.d.ts` 类型定义，**严禁安装外部 `@types/three`** 以免版本冲突。
+* **按需分流**：工业监控重在“原生性能与吞吐控制”，营销宣传重在“组件式动效编排”。
+
+### 3. 工程创建与依赖安装
+```bash
+# 场景 A (Vue/Vanilla 原生数字孪生)：
+pnpm add three gsap
+
+# 场景 B (React 营销落地页 3D 特效)：
+pnpm add three @react-three/fiber @react-three/drei gsap
+```
+
+### 4. 核心关键配置
+```ts
+// 场景 A 原生 Three.js 核心初始化 (src/world/World.ts)
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+export class World {
+  private scene = new THREE.Scene();
+  private camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  private renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+  constructor(container: HTMLElement) {
+    this.renderer.setSize(container.clientWidth, container.clientHeight);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(this.renderer.domElement);
+    new OrbitControls(this.camera, this.renderer.domElement);
+    this.animate();
   }
-  ```
-* **Agent 交互指令**：当要求 AI Agent 编写新业务功能前，先输入指令：*“请先执行 `pnpm gen:api` 同步最新契约，再基于 `schema.d.ts` 中的强类型定义编写请求调用代码。”*
+
+  private animate = () => {
+    requestAnimationFrame(this.animate);
+    this.renderer.render(this.scene, this.camera);
+  };
+}
+```
+
+### 5. 推荐工程目录结构
+```text
+src/
+├── assets/          # 3D 静态资产 (GLTF/GLB 模型, HDR 环境贴图)
+├── world/           # 场景核心模块 (Scene, Camera, Renderer, Controls)
+└── main.ts          # 初始化装配
+```
 
 ---
 
-## 6. 多仓库治理与交付运维体系
+## 08. Web 文档系统 (VitePress)
 
-### 6.1 Multi-repo 仓库组织与命名规范
+### 1. 选型组合
+* **技术底座**：VitePress (Vue 3) + Markdown + Vite 5
+* **模式**：纯静态 SSG (Static Site Generation)
 
-| 仓库名称 | 承载业务与技术栈 | 部署交付物类型 | 负责端形态 |
-| :--- | :--- | :--- | :--- |
-| `repo-core-backend` | Java (RuoYi-Vue-Plus) + MySQL/Redis | Docker 镜像 / Jar | 核心业务服务端 |
-| `repo-web-admin` | Vue 3 (plus-ui) + Element Plus | Nginx 静态文件 / Jar 内嵌 | Web 业务管理系统 |
-| `repo-brand-site` | React 19 + Vite 5 + TailwindCSS + shadcn | Nginx 静态文件 / CDN 边缘 | 品牌官网 / 宣传落地页 |
-| `repo-mini-program`| Vue 3 (uni-app) + UnoCSS + Wot Design | 微信小程序代码包 (CI 上传) | 微信 / 多端小程序 |
-| `repo-mobile-desktop`| Flutter 3.x + Riverpod + Drift + shadcn | APK / IPA / EXE / DMG | 移动 APP & PC 桌面端 |
-| `repo-mobile-h5` | Vue 3 + Vant 4 + vw 适配 | Nginx 静态文件 / CDN 边缘 | 独立移动端 H5 |
-| `repo-big-screen` | Vue 3 + autofit.js + ECharts 5 | Nginx 静态文件 | 数据可视化大屏 |
-| `repo-web3d-twin` | Three.js + TypeScript + Vite | Nginx 静态文件 | Web 3D 数字孪生 |
-| `repo-web-docs` | VitePress (Vue 3) | 纯静态 HTML / GitHub Pages | Web 文档系统 |
-| `repo-ai-sidecar` | Python 3.11+ (FastAPI + uv) | Docker 镜像 / 独立进程 | AI Agent 自动化微服务 |
+### 2. 核心考量
+* **Docs-as-Code 标杆**：开箱自带暗黑模式、侧边栏自动生成、全文字文检索；构建为纯静态 HTML，秒级极速渲染。
+* **组件无缝交互**：可在 Markdown 文件中直接嵌入书写 Vue 交互组件，演示业务 UI。
 
-### 6.2 零明文机密与环境隔离红线
-* **配置分离**：全端禁止在代码仓库中硬编码任何真实数据库密码、云密钥（OSS AK/SK）、微信 AppSecret 或大模型 API Key。
-* **脱敏占位**：配置文件统一使用大写占位符（如 `${DB_PASSWORD}`、`${DEEPSEEK_API_KEY}`）或从环境变量注入。
+### 3. 工程创建与依赖安装
+```bash
+mkdir my-docs && cd my-docs
+pnpm init
+pnpm add -D vitepress vue
+npx vitepress init
+```
+
+### 4. 核心关键配置
+```ts
+// docs/.vitepress/config.mts
+import { defineConfig } from 'vitepress';
+
+export default defineConfig({
+  title: "技术规范与开发文档",
+  description: "全栈全端统一技术栈与工程指引",
+  lang: 'zh-CN',
+  themeConfig: {
+    nav: [
+      { text: '指南', link: '/guide/start' },
+      { text: 'API 契约', link: '/api/' },
+    ],
+    search: { provider: 'local' }, // 启用开箱即用的离线全文检索
+  },
+});
+```
+
+### 5. 推荐工程目录结构
+```text
+docs/
+├── .vitepress/      # 站点配置与自定义主题扩展
+│   └── config.mts
+├── guide/           # 架构规范与入门指引 Markdown
+├── api/             # 接口契约说明 Markdown
+└── public/          # 文档专属图片与静态资源
+```
 
 ---
 
-## 7. 附录：权威信源与参考索引
+## 09. 核心业务后端 (Spring Boot 3 / Cloud 6.X 双生矩阵)
 
-本规范所涉及的框架与核心库均已完成活跃度与代码纯净度核查，官方权威索引如下：
+### 1. 选型组合与架构双模
+* **技术基座**：JDK 17/21 + MyBatis-Plus + Redis 7 + MySQL 8
+* **安全鉴权与契约**：Sa-Token (多端 Session 隔离) + SpringDoc OpenAPI 3.0
+* **双生形态划分**：
+  1. **单体架构（默认主选）**：**`RuoYi-Vue-Plus 6.X`**。适合 90% 敏捷中小型业务，开发调试极速，零微服务运维心智负担；
+  2. **微服务架构（企业级分布式扩展）**：**`RuoYi-Cloud-Plus 6.X`**。基于 Spring Cloud Alibaba 2023+ / Nacos / Spring Cloud Gateway / Sentinel，适用于多业务线拆分、高并发与多租户物理隔离场景。
+  * *(注：前端 `plus-ui` 6.X-Vue 分支天然无缝兼容单体与微服务两种架构)*
 
-1. **核心服务端**：
-   * RuoYi-Vue-Plus 官方仓库：[https://gitee.com/dromara/RuoYi-Vue-Plus](https://gitee.com/dromara/RuoYi-Vue-Plus)
-   * Sa-Token 官方文档：[https://sa-token.cc/](https://sa-token.cc/)
-2. **Web 业务台与官网**：
-   * plus-ui 官方仓库：[https://gitee.com/JavaLionLi/plus-ui](https://gitee.com/JavaLionLi/plus-ui)
-   * shadcn/ui 官方组件库：[https://ui.shadcn.com/](https://ui.shadcn.com/)
-3. **移动端与全平台同构**：
-   * Flutter 官方技术门户：[https://flutter.dev/](https://flutter.dev/)
-   * Riverpod 官方开发文档：[https://riverpod.dev/](https://riverpod.dev/)
-   * Drift (SQLite) 官方规范：[https://drift.simonbinder.eu/](https://drift.simonbinder.eu/)
-   * Wot Design Uni 小程序组件库：[https://wot-design-uni.netlify.app/](https://wot-design-uni.netlify.app/)
-   * Vant 4 官方文档：[https://vant-ui.github.io/vant/](https://vant-ui.github.io/vant/)
-4. **可视化、3D 与文档**：
-   * autofit.js 官方仓库：[https://github.com/Auto-Plugin/autofit.js](https://github.com/Auto-Plugin/autofit.js)
-   * Three.js 官方门户：[https://threejs.org/](https://threejs.org/)
-   * VitePress 官方文档：[https://vitepress.dev/](https://vitepress.dev/)
-5. **AI 辅助服务端**：
-   * Astral uv 官方指南：[https://docs.astral.sh/uv/](https://docs.astral.sh/uv/)
-   * FastAPI 官方开发指南：[https://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)
+### 2. 核心考量
+* **全端唯一业务主心骨**：承载全部关系型建模、资金交易、数据库事务与全端统一认证。
+* **消灭接口幻觉**：基于真实 Java 后端实体自动生成标准 OpenAPI 3.0 元数据契约，驱动各端客户端 SDK 自动化生成。
+
+### 3. 工程创建与依赖安装
+```bash
+# 模式 A：单体架构 (推荐首选)
+git clone -b 6.X https://gitee.com/dromara/RuoYi-Vue-Plus.git core-backend-single
+cd core-backend-single
+mvn clean install
+
+# 模式 B：微服务架构 (企业级分布式扩展)
+git clone -b 6.X https://gitee.com/dromara/RuoYi-Cloud-Plus.git core-backend-cloud
+cd core-backend-cloud
+mvn clean install
+```
+
+### 4. 核心关键配置
+```yaml
+# application.yml (Sa-Token 多端 Session 隔离与 OpenAPI 契约配置)
+sa-token:
+  token-name: Authorization
+  timeout: 2592000
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+```
+
+### 5. 推荐工程目录结构
+```text
+# 单体架构目录 (RuoYi-Vue-Plus 6.X)
+ruoyi/
+├── ruoyi-admin/         # 入口启动模块与 Web 控制器
+├── ruoyi-common/        # 通用核心库 (core, redis, satoken, tenant)
+├── ruoyi-modules/       # 业务领域模块 (system, business)
+└── pom.xml              # 统一版本受管父 POM
+
+# 微服务架构目录 (RuoYi-Cloud-Plus 6.X 扩展)
+ruoyi-cloud/
+├── ruoyi-gateway/       # Spring Cloud Gateway 统一流量网关
+├── ruoyi-auth/          # 统一认证授权中心 (Sa-Token OAuth2/SSO)
+├── ruoyi-common/        # 微服务公共基础设施
+├── ruoyi-modules/       # 独立微服务模块 (system, gen, job, business)
+└── pom.xml
+```
+
+---
+
+## 10. AI Agent 微服务与自动化 (Python FastAPI)
+
+### 1. 选型组合
+* **技术底座**：Python 3.11+ + FastAPI
+* **环境与包管理**：Astral `uv` (秒级依赖解析与运行)
+* **模型调用与数据**：Pydantic v2 + `httpx` + `LiteLLM` / `LangGraph`
+
+### 2. 核心考量
+* **专注 AI 能力侧翼**：不参与复杂业务事务，专门负责大模型调度、SSE 流式推流、RAG 向量切分与离线异步爬虫。
+* **轻量高性能**：基于 uv 实现秒级虚拟环境初始化；标准异步事件循环扛住高并发长连接。
+
+### 3. 工程创建与依赖安装
+```bash
+# 使用 uv 初始化极速 Python 项目
+uv init ai-sidecar
+cd ai-sidecar
+uv add fastapi uvicorn pydantic httpx
+```
+
+### 4. 核心关键配置
+```python
+# main.py (标准生产级流式 SSE 推送，已加入 Nginx 防缓冲响应头)
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+import asyncio
+
+app = FastAPI(title="AI Agent Sidecar")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+
+async def token_stream():
+    for chunk in ["AI ", "Native ", "Full ", "Stack ", "Ready."]:
+        yield f"data: {chunk}\n\n"
+        await asyncio.sleep(0.1)
+
+@app.get("/api/ai/chat/stream")
+async def chat_stream():
+    # 核心：生产环境 Nginx 默认会缓存 SSE，必须注入 X-Accel-Buffering: no 禁用缓冲
+    headers = {
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+    }
+    return StreamingResponse(token_stream(), media_type="text/event-stream", headers=headers)
+```
+
+### 5. 推荐工程目录结构
+```text
+app/
+├── api/             # 路由端点 (chat, rag, crawler)
+├── core/            # 配置文件与全局日志
+├── services/        # 核心逻辑 (LLM 客户端, Prompt 编排)
+├── schemas/         # Pydantic 请求/响应数据模型
+└── main.py          # FastAPI 实例装配入口
+```
