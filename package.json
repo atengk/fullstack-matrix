@@ -1,0 +1,37 @@
+{
+  "name": "fullstack-matrix",
+  "version": "1.0.0",
+  "private": true,
+  "description": "全端全栈技术选型矩阵与架构决策蓝图 - 34 个垂直领域现代化技术栈全景知识库",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "minisearch": "^7.2.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "^1.2.25",
+    "@shikijs/vitepress-twoslash": "^4.4.3",
+    "@stackblitz/sdk": "^1.11.1",
+    "@unocss/preset-icons": "^66.0.0",
+    "@unocss/preset-uno": "^66.0.0",
+    "@vite-pwa/vitepress": "^1.1.0",
+    "markdown-it-mathjax3": "^4.3.2",
+    "markmap-lib": "^0.18.12",
+    "markmap-view": "^0.18.12",
+    "medium-zoom": "^1.1.0",
+    "mermaid": "^12.0.0",
+    "typescript": "^5.7.3",
+    "unocss": "^66.0.0",
+    "vitepress": "^1.6.3"
+  },
+  "author": "Ateng"
+}

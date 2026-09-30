@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="100%" height="100%" fill="none">
+  <defs>
+    <!-- 主渐变：电光青 -> 翡翠绿 -->
+    <linearGradient id="matrixGradPrimary" x1="28" y1="28" x2="228" y2="228" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="40%" stop-color="#06b6d4" />
+      <stop offset="75%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- 柔和副渐变 -->
+    <linearGradient id="matrixGradCyanGreen" x1="40" y1="60" x2="216" y2="196" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+
+    <!-- 立体芯片顶面 -->
+    <linearGradient id="matrixChipTop" x1="128" y1="84" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- 立体芯片左侧面 -->
+    <linearGradient id="matrixChipLeft" x1="90" y1="128" x2="128" y2="172" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0f766e" />
+    </linearGradient>
+
+    <!-- 立体芯片右侧面 -->
+    <linearGradient id="matrixChipRight" x1="128" y1="128" x2="166" y2="172" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0d9488" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+
+    <!-- 科技外光晕阴影 -->
+    <filter id="matrixNeonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#06b6d4" flood-opacity="0.32" />
+    </filter>
+
+    <filter id="matrixCoreGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- 背景轻量科技光晕圆环与数据雷达刻度 -->
+  <circle cx="128" cy="128" r="102" stroke="url(#matrixGradPrimary)" stroke-width="1.5" stroke-dasharray="6 8" opacity="0.25" />
+  <circle cx="128" cy="128" r="82" stroke="url(#matrixGradCyanGreen)" stroke-width="1" stroke-dasharray="4 12" opacity="0.2" />
+
+  <g filter="url(#matrixNeonGlow)">
+    <!-- 1. 外层主体：正六边形外框与分段导轨 -->
+    <!-- 六边形顶点：上(128,24) 右上(218,76) 右下(218,180) 下(128,232) 左下(38,180) 左上(38,76) -->
+    <path
+      d="M128 24 L218 76 L218 180 L128 232 L38 180 L38 76 Z"
+      stroke="url(#matrixGradPrimary)"
+      stroke-width="5"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+      opacity="0.95"
+    />
+
+    <!-- 六边形角偶内衬装饰角标 -->
+    <path d="M128 36 L206 81 L206 175 L128 220 L50 175 L50 81 Z" stroke="url(#matrixGradPrimary)" stroke-width="1.5" opacity="0.3" stroke-dasharray="16 10" />
+
+    <!-- 2. 六大领域拓扑总线 (6 Symmetric Bus Tracks) -->
+    <!-- 领域 1: 正上方总线 -->
+    <path d="M128 24 V64 L114 74 V94" stroke="url(#matrixGradCyanGreen)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="114" cy="94" r="3.5" fill="#00f2fe" />
+
+    <!-- 领域 2: 右上方总线 -->
+    <path d="M218 76 L184 96 H160 L146 104" stroke="url(#matrixGradCyanGreen)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="146" cy="104" r="3.5" fill="#06b6d4" />
+
+    <!-- 领域 3: 右下方总线 -->
+    <path d="M218 180 L184 160 H160 L146 152" stroke="url(#matrixGradCyanGreen)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="146" cy="152" r="3.5" fill="#10b981" />
+
+    <!-- 领域 4: 正下方总线 -->
+    <path d="M128 232 V192 L142 182 V162" stroke="url(#matrixGradCyanGreen)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="142" cy="162" r="3.5" fill="#059669" />
+
+    <!-- 领域 5: 左下方总线 -->
+    <path d="M38 180 L72 160 H96 L110 152" stroke="url(#matrixGradCyanGreen)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="110" cy="152" r="3.5" fill="#10b981" />
+
+    <!-- 领域 6: 左上方总线 -->
+    <path d="M38 76 L72 96 H96 L110 104" stroke="url(#matrixGradCyanGreen)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="110" cy="104" r="3.5" fill="#00f2fe" />
+
+    <!-- 3. 中心等距立体全栈核心晶圆 (Central Isometric Matrix Crystal) -->
+    <!-- 顶面 -->
+    <path d="M128 92 L164 112 L128 132 L92 112 Z" fill="url(#matrixChipTop)" />
+    <!-- 左切面 -->
+    <path d="M92 112 L128 132 V164 L92 144 Z" fill="url(#matrixChipLeft)" />
+    <!-- 右切面 -->
+    <path d="M128 132 L164 112 V144 L128 164 Z" fill="url(#matrixChipRight)" />
+
+    <!-- 中心立体芯片边缘高光 -->
+    <path d="M92 112 L128 92 L164 112 L128 132 Z" stroke="#6ee7b7" stroke-width="1.8" stroke-linejoin="round" />
+    <path d="M128 132 V164" stroke="#6ee7b7" stroke-width="1.8" stroke-linecap="round" />
+    <path d="M92 112 V144 L128 164 L164 144 V112" stroke="#34d399" stroke-width="1.5" stroke-linejoin="round" />
+
+    <!-- 中心核心发光量子点 (Core Quantum Node) -->
+    <g filter="url(#matrixCoreGlow)">
+      <circle cx="128" cy="112" r="4.5" fill="#ffffff" />
+      <circle cx="128" cy="112" r="2.5" fill="#00f2fe" />
+    </g>
+
+    <!-- 6 个顶点微型数据连接终端 (Symmetric Corner Pins) -->
+    <circle cx="128" cy="24" r="4" fill="#00f2fe" stroke="#0f172a" stroke-width="1.5" />
+    <circle cx="218" cy="76" r="4" fill="#06b6d4" stroke="#0f172a" stroke-width="1.5" />
+    <circle cx="218" cy="180" r="4" fill="#10b981" stroke="#0f172a" stroke-width="1.5" />
+    <circle cx="128" cy="232" r="4" fill="#059669" stroke="#0f172a" stroke-width="1.5" />
+    <circle cx="38" cy="180" r="4" fill="#10b981" stroke="#0f172a" stroke-width="1.5" />
+    <circle cx="38" cy="76" r="4" fill="#06b6d4" stroke="#0f172a" stroke-width="1.5" />
+  </g>
+</svg>
