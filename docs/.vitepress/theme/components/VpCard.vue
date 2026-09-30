@@ -45,7 +45,6 @@ const props = withDefaults(
     badgeType?: 'tip' | 'warning' | 'danger' | 'info' | 'purple'
   }>(),
   {
-    target: '_self',
     badgeType: 'tip',
   }
 )
@@ -54,7 +53,7 @@ const resolvedDesc = computed(() => props.desc || props.description || '')
 const isExternal = computed(() => props.link && /^(https?:)?\/\//.test(props.link))
 const resolvedTarget = computed(() => {
   if (props.target) return props.target
-  return isExternal.value ? '_blank' : '_self'
+  return isExternal.value ? '_blank' : undefined
 })
 
 /**
